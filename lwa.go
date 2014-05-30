@@ -56,50 +56,15 @@ func Serve(handler http.Handler) error {
 	if err != nil {
 		return err
 	}
-	var nconn int32
-	quit := make(chan struct{})
-	done := make(chan struct{})
 	server := http.Server{
 		Handler: auth,
-		ConnState: func(c net.Conn, s http.ConnState) {
-			switch s {
-			default:
-				return
-			case http.StateNew:
-				atomic.AddInt32(&nconn, 1)
-				return
-			case http.StateClosed, http.StateHijacked:
-				// if it's hijacked, the caller is application must further block if needed
-			}
-			if 0 < atomic.AddInt32(&nconn, -1) {
-				return
-			}
-			// at this point there are no active connections,
-			// so it's safe to teardown if we've been asked to
-			select {
-			case <-quit:
-				close(done)
-			default:
-			}
-		},
 	}
-	// no real benefits to keep-alive over the loopback
-	// if you enable leave keep-alives enabled, the above ConnState callback might break
-	server.SetKeepAlivesEnabled(false)
 
 	// listen on a random loopback port
 	l, err := net.Listen("tcp", "localhost:0")
 	if err != nil {
 		return err
 	}
-
-	// block until connections are closed. by the time this runs, the listener is closed
-	// and nconn cannot increase; if the server hasn't started yet, nconn will be 0 anyway
-	defer func() {
-		if 0 < atomic.LoadInt32(&nconn) {
-			<-done
-		}
-	}()
 
 	defer l.Close()
 
@@ -133,7 +98,6 @@ func Serve(handler http.Handler) error {
 	if err != nil {
 		return err
 	}
-	close(quit)
 	return err
 }
 
