@@ -1,7 +1,7 @@
 lwa facilitates running Go web applications locally; it can fill the role of
 traditional desktop GUI applications.
 
-Documentation: https://godoc.org/github.com/extemporalgenome/lwa
+Documentation: https://godoc.org/github.com/xtgo/lwa
 
-lwa is under review, and may change. When lwa stabilizes, it will be available
-under github.com/xtgo
+Currently, a semi-recent version of Chrome/Chromium is required to be on the
+PATH under the name "chrome"

@@ -9,7 +9,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/extemporalgenome/lwa"
+	"github.com/xtgo/lwa"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
