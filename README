@@ -4,4 +4,4 @@ traditional desktop GUI applications.
 Documentation: https://godoc.org/github.com/xtgo/lwa
 
 Currently, a semi-recent version of Chrome/Chromium is required to be on the
-PATH under the name "chrome"
+PATH under the name "chrome". Go 1.3 (beta) or later is required to import lwa.
